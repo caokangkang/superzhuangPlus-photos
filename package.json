@@ -1,0 +1,28 @@
+{
+  "private": true,
+  "author": "caokangkang <hkd_ckk@163.com>",
+  "scripts": {
+    "dev": "umi dev",
+    "start": "cross-env UMI_ENV=dev umi dev",
+    "start-test": "cross-env UMI_ENV=test umi dev",
+    "start-pro": "cross-env UMI_ENV=pro umi dev",
+    "build:test": "cross-env UMI_ENV=test umi build",
+    "build:prod": "cross-env UMI_ENV=prod umi build",
+    "build": "cross-env UMI_ENV=prod umi build",
+    "postinstall": "umi setup",
+    "setup": "umi setup"
+  },
+  "dependencies": {
+    "antd-mobile": "^5.30.0",
+    "axios": "^1.4.0",
+    "umi": "^4.0.69",
+    "umi-request": "^1.4.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
+    "cross-env": "^7.0.3",
+    "postcss-px-to-viewport": "^1.1.1",
+    "typescript": "^5.0.3"
+  }
+}
