@@ -6,7 +6,6 @@ interface processType {
   [propName: string]: any;
 }
 const { UMI_ENV }: processType = process.env;
-// console.log('PRO_VAR', UMI_ENV)
 
 /* 接口前缀 用于代理 */
 const ProConfig = {
@@ -16,9 +15,10 @@ const ProConfig = {
 };
 
 export default {
-  "/api": {
-    target: ProConfig[UMI_ENV],
+   "/api": {
+    // target: ProConfig[UMI_ENV],
+    target: 'https://plusapi-test.chuhaikankan.com/',
     changeOrigin: true,
-    pathRewrite: { "^/api": "" },
+    pathRewrite: { '^': '' },
   },
 };

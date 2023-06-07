@@ -40,7 +40,7 @@ const errorHandler = (error: any) => {
 };
 // 对 extend 实例进行简单的封装
 const request = extend({
-  timeout: 3000,
+  timeout: 5000,
   headers: {
     "Content-type": "application/json;charset=utf-8",
   },
