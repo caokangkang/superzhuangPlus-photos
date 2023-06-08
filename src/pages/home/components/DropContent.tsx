@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './DropContent.less';
 
 type DropProps = {
@@ -7,23 +7,46 @@ type DropProps = {
     text: string,
     value: number
   }[]
+  isSelected: number[];
   onSelected: (type: string, value: number) => void
 }
 
-const DropContent: React.FC<DropProps> = (props) => {
-  const [isSelectKey, setIsSelectKey] = useState<number>(-1)
-  // console.log('props', props)
-  const { type, secondTagList, onSelected } = props;
+const DropContent = (props: DropProps) => {
+  const { type, secondTagList, isSelected, onSelected } = props;
+  const [isSelectArray, setIsSelectArray] = useState<number[]>([])
 
-  const handleSelect = (value: number, text: string) => {
-    // console.log('index', index)
-    setIsSelectKey(value)
-    onSelected(type, text)
+  useEffect(() => {
+    setIsSelectArray(isSelected)
+  }, [isSelected])
+
+  // 去除多余元素
+  const removeElement = async (element: number) => {
+    // 使用 filter 方法过滤掉要移除的元素
+    const newArray = isSelectArray.filter(item => item !== element);
+    await setIsSelectArray(newArray)
+    onSelected(type, newArray)
+  };
+
+  const handleSelect = async (value: number) => {
+    // console.log('value', value)
+    let arr: number[]
+    if (type == 'synthesis') {
+      onSelected(type, [value])
+      return
+    }
+    if (isSelectArray.includes(value)) {
+      removeElement(value)
+    } else {
+      arr = [...isSelectArray, value]
+      await setIsSelectArray(arr)
+      onSelected(type, arr)
+    }
   }
+  
   return (
-    <div className={styles.dropContent}>
+    <div className={styles.dropContent} >
       {secondTagList.map((item) => (
-        <span className={`${styles.item} ${isSelectKey === item.value ? styles.itemActive : ''}`} key={item.value} onClick={() => handleSelect(item.value, item.text)}>{item.text}</span>
+        <span className={`${styles.item} ${isSelectArray.includes(item.value) ? styles.itemActive : ''}`} key={item.value} onClick={() => handleSelect(item.value)}>{item.text}</span>
       ))}
     </div>
   );

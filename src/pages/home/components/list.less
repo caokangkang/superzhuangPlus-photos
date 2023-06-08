@@ -47,10 +47,16 @@
       }
     }
     .spaceCotent {
+      display: -webkit-box;
       margin: 20px 0 0 20px;
       font-size: 26px;
       font-weight: 500;
       color: #333333;
+      word-break: break-all;
+      text-overflow: ellipsis;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      overflow: hidden;
     }
   }
 }

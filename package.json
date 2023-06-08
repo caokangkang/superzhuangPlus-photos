@@ -15,6 +15,7 @@
   "dependencies": {
     "antd-mobile": "^5.30.0",
     "axios": "^1.4.0",
+    "project-libs": "^1.1.8",
     "umi": "^4.0.69",
     "umi-request": "^1.4.0"
   },

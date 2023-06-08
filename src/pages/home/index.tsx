@@ -2,35 +2,35 @@ import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import { Dropdown } from 'antd-mobile';
 import { DownOutline } from 'antd-mobile-icons';
+import { isEmpty } from 'project-libs';
 import { getMater, plusDecorationContentList } from './service';
 import type { dictionariesData, plusDecorationContentParam, listDataType } from './data';
 import { queryKeyArrayItem, getUrlParameter } from '@/uitls/index';
 import DropContent from './components/DropContent';
 import List from './components/list';
+import ViewWithFooter from './components/ImgDetail/index';
+import { useObserverHook } from '@/hooks/index';
+import { CommonEnum } from '@/enums/index';
 
 export default function Page() {
   // 筛选内容
   const [synthesisData, setSynthesisData] = useState<dictionariesData[]>([]);
-  const [synthesisSelected, setSynthesisSelected] = useState<string>('')
+  const [synthesisSelected, setSynthesisSelected] = useState<number[]>([])
   const [styleData, setStyleData] = useState<dictionariesData[]>([]);
-  const [styleSelected, setStyleSelected] = useState<string>('');
+  const [styleSelected, setStyleSelected] = useState<number[]>([])
   const [spaceData, setSpaceData] = useState<dictionariesData[]>([]);
-  const [spacesSelected, setSpacesSelected] = useState<string>('');
+  const [spacesSelected, setSpacesSelected] = useState<number[]>([])
+  const [showLoading, setShowLoading] = useState<boolean>(false);
+  const [tagNum, setTagNum] = useState<number[]>([]);
+
+  // 页数
+  const [page, setPage] = useState(CommonEnum.PAGE);
+
+  // 是否吸顶元素
+  const [isSticky, setIsSticky] = useState<boolean>(false);
 
   // 获取浏览器参数
-  const tfcode: string = !getUrlParameter('tfcode')?'baidu_free': getUrlParameter('tfcode');
-  // 列表参数
-  const [listParam, setListParams] = useState<plusDecorationContentParam>({
-    currentPage: 1,
-    pageSize: 20,
-    contentTemplate:'9500002',
-    // contentTemplateSecond:'',
-    secondTagNumbers: [],
-    // typeCode: '',
-    tfcode: tfcode,
-    ownedIp: '100004',
-    sortType: 0,
-  })
+  const tfcode: string = !getUrlParameter('tfcode') ? 'baidu_free' : getUrlParameter('tfcode');
   // 列表内容
   const [listData, setListData] = useState<listDataType[]>([]);
 
@@ -39,7 +39,12 @@ export default function Page() {
 
   useEffect(() => {
     getDictionariesDate()
-    getList();
+    getList(1);
+    window.addEventListener("scroll", handleScroll)
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+
+    }
   }, [])
 
 
@@ -56,46 +61,128 @@ export default function Page() {
     }
   }
 
+  const invokeHttp = async (currentPage: number, sortType: number = 0, secondTagNumbers: number[] = []) => {
+    console.log('tagNum', tagNum)
+    const { data } = await plusDecorationContentList({
+      ...page,
+      currentPage,
+      contentTemplate: '9500002',
+      // contentTemplateSecond:'',
+      secondTagNumbers,
+      // typeCode: '',
+      tfcode: tfcode,
+      ownedIp: '100004',
+      sortType: sortType,
+    });
+
+    return data;
+  }
+
   // 获取列表
-  const getList = async () => {
-    const { data } = await plusDecorationContentList(listParam);
-    if (data.data.length) {
+  const getList = async (currentPage: number) => {
+    const data = await invokeHttp(currentPage);
+    if (!isEmpty(data) && data.data.length === page.pageSize) {
       setListData(data.data)
+      setShowLoading(true);
+    } else {
+      setShowLoading(false);
     }
   }
 
 
   // 获取当前选中项返回值
-  const getSelectedValue = (type: string, value: string) => {
+  const getSelectedValue = async (type: string, value: Array<number>) => {
+    setListData([])
     if (type === 'synthesis') {
+      setStyleSelected([])
+      setSpacesSelected([])
       setSynthesisSelected(value)
     } else if (type === 'style') {
+      setSynthesisSelected([])
+      setSpacesSelected([])
       setStyleSelected(value)
     } else if (type === 'space') {
+      setSynthesisSelected([])
+      setStyleSelected([])
       setSpacesSelected(value)
+    }
+    console.log('value', value)
+    const tagNum = JSON.parse(JSON.stringify(value));
+    // setTagNum(tagNum)
+    let data = await invokeHttp(1, type === 'synthesis' ? value[0] : 0, type === 'synthesis' ? [] : value);
+    if (!isEmpty(data) && data.data.length === page.pageSize) {
+      setListData(data.data)
+      setShowLoading(true);
+    } else {
+      setShowLoading(false);
     }
   }
 
-  
+  /**
+ * 1，页面初始化时候请求接口；
+ * 2，监听loading组件是否展示出来；
+ * 3，修改page,pageNum+1,再次重新请求接口；
+ * 4，拼装数据，然后page
+ */
+  useObserverHook('#' + CommonEnum.LOADING_ID, async (entries: any) => {
+    // console.log(entries)
+    if (entries[0].isIntersecting) {
+      const result = await invokeHttp(page.currentPage + 1);
+      if (!isEmpty(listData) && !isEmpty(result.data) && result.data.length === page.pageSize) {
+        setListData([...listData, ...result.data]);
+        setPage({
+          ...page,
+          currentPage: page.currentPage + 1
+        });
+        setShowLoading(true);
+      } else {
+        setShowLoading(false);
+      }
+    }
+  }, null);
+
+  //  判断是否超过导航高度
+  const handleScroll = () => {
+    const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+    const threshold = 200; // 滚动位置阈值
+    setIsSticky(scrollTop > threshold);
+  };
+
+  // 算报价
+  const handleQuoted = () => {
+    window.location.href = 'http://plusm-test.chuhaikankan.com/QuotesGadgets?tfcode=baidu_free&PageName=';
+  }
+
+
   return (
     <div>
-      {/* 筛选 */}
-      <Dropdown arrow={<DownOutline />}>
-        <Dropdown.Item key="synthesis" title={synthesisSelected !== '' ? synthesisSelected : '综合排序'}>
-          <DropContent secondTagList={synthesisData} type={'synthesis'} onSelected={getSelectedValue} />
-        </Dropdown.Item>
+      <div className={isSticky ? styles.sticky : ''}>
+        {/* 筛选 */}
+        <Dropdown arrow={<DownOutline />} >
+          <Dropdown.Item key="synthesis" title='综合排序'>
+            <DropContent secondTagList={synthesisData} isSelected={synthesisSelected} type={'synthesis'} onSelected={getSelectedValue} />
+          </Dropdown.Item>
 
-        <Dropdown.Item key="style" title={styleSelected !== '' ? styleSelected : '风格'}>
-          <DropContent secondTagList={styleData} type={'style'} onSelected={getSelectedValue} />
-        </Dropdown.Item>
+          <Dropdown.Item key="style" title='风格'>
+            <DropContent secondTagList={styleData} isSelected={styleSelected} type={'style'} onSelected={getSelectedValue} />
+          </Dropdown.Item>
 
-        <Dropdown.Item key="space" title={spacesSelected !== '' ? spacesSelected : '风格'}>
-          <DropContent secondTagList={spaceData} type={'space'} onSelected={getSelectedValue} />
-        </Dropdown.Item>
-      </Dropdown>
+          <Dropdown.Item key="space" title='空间'>
+            <DropContent secondTagList={spaceData} isSelected={spacesSelected} type={'space'} onSelected={getSelectedValue} />
+          </Dropdown.Item>
+        </Dropdown>
+      </div>
 
       {/* 列表 */}
-      <List listData={listData}/>
+      <List listData={listData} showLoading={showLoading} />
+
+      {/* 算报价 */}
+      <div className={styles.quotedPrice} onClick={handleQuoted}>
+        <img src={calculatorImg} alt="" />
+      </div>
+
+      {/* 详情图片查看 */}
+      <ViewWithFooter />
     </div>
   );
 }

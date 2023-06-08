@@ -1,31 +1,38 @@
-import request from '@/uitls/request';
 import React from 'react';
+import { isEmpty } from 'project-libs';
 import styles from './list.less';
 import type { listDataType } from '../data';
+import { ShowLoading } from '@/components/index';
+import { OrderSkeletons } from '@/skeletons/index';
 
 type ListProps = {
-  listData: listDataType
+  listData: listDataType;
+  showLoading: boolean;
 }
 
-const List: React.FC<ListProps> = (props) => {
-  // console.log('first', first)
+const List = (props: ListProps) => {
   const { listData } = props;
-  const testImg = require('../../../assets/yay.jpg');
   const browseImg = require('@/assets/png/browse.png');
   return (
-    <div className={styles.listWrap}>
-      {listData?.map((item: listDataType) => (
-        <div className={styles.ItemWrap} key={item.id}>
-          <div className={styles.imgContent}>
-            <img src={item.firstImg} alt="" />
-            <div className={styles.browseWrap}>
-              <img className={styles.browseImg} src={browseImg} alt="" />
-              <span className={styles.browseNum}>{item.clickShow}</span>
+    <div>
+      {isEmpty(listData) ?
+        <OrderSkeletons /> :
+        <div className={styles.listWrap}>
+          {listData?.map((item: listDataType) => (
+            <div className={styles.ItemWrap} key={item.id}>
+              <div className={styles.imgContent}>
+                <img src={item.firstImg} alt="" />
+                <div className={styles.browseWrap}>
+                  <img className={styles.browseImg} src={browseImg} alt="" />
+                  <span className={styles.browseNum}>{item.clickShow}</span>
+                </div>
+              </div>
+              <div className={styles.spaceCotent}>{item.contentTitle}</div>
             </div>
-          </div>
-          <div className={styles.spaceCotent}>{item.contentTitle}</div>
+          ))}
+          <ShowLoading showLoading={props?.showLoading} />
         </div>
-      ))}
+      }
     </div>
   );
 }
