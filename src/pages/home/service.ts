@@ -22,7 +22,7 @@ export function plusDecorationContentList(
 export function getDecorationContentDetails(data: string): Promise<any> {
   console.log('123', data)
   return request(
-    `api/stayUser/getApiDecorationContentDetails?contentId=${data.}`,
+    `api/stayUser/getApiDecorationContentDetails?contentId=${data}`,
     {
       method: "GET",
     }
