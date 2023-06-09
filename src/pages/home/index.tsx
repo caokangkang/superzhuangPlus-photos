@@ -3,7 +3,7 @@ import styles from './index.less';
 import { Dropdown } from 'antd-mobile';
 import { DownOutline } from 'antd-mobile-icons';
 import { isEmpty } from 'project-libs';
-import { getMater, plusDecorationContentList } from './service';
+import { getMater, plusDecorationContentList, getDecorationContentDetails } from './service';
 import type { dictionariesData, plusDecorationContentParam, listDataType } from './data';
 import { queryKeyArrayItem, getUrlParameter } from '@/uitls/index';
 import DropContent from './components/DropContent';
@@ -22,6 +22,7 @@ export default function Page() {
   const [spacesSelected, setSpacesSelected] = useState<number[]>([])
   const [showLoading, setShowLoading] = useState<boolean>(false);
   const [tagNum, setTagNum] = useState<number[]>([]);
+  const [visible, setVisible] = useState<boolean>(false)
 
   // 页数
   const [page, setPage] = useState(CommonEnum.PAGE);
@@ -34,6 +35,13 @@ export default function Page() {
   // 列表内容
   const [listData, setListData] = useState<listDataType[]>([]);
 
+  // 详情图片
+  const [imgList, setImgList] = useState<listDataType>({
+    clickShow: 0,
+    contentTitle: '',
+    imgList: [],
+  })
+
   // 计算器
   const calculatorImg = require('@/assets/png/calculator.png');
 
@@ -43,7 +51,6 @@ export default function Page() {
     window.addEventListener("scroll", handleScroll)
     return () => {
       window.removeEventListener('scroll', handleScroll);
-
     }
   }, [])
 
@@ -90,6 +97,38 @@ export default function Page() {
   }
 
 
+  // 获取详情
+  const getDetail = async (id: string) => {
+    if (!id) return;
+    const { data } = await getDecorationContentDetails(id)
+    if (data && data.imgList.length) {
+      setImgList({
+        clickShow: data.clickShow,
+        contentTitle: data.contentTitle,
+        imgList: data.imgList,
+      })
+    }
+  }
+
+  // 关闭详情
+  const closeDetail = (flag: boolean) => {
+    setTimeout(() => {
+      setVisible(flag)
+    }, 200)
+  }
+
+
+
+
+  // 获取详情ID
+  const getContentId = async (id: string) => {
+    if (id) {
+      await getDetail(id);
+      await setVisible(true)
+    }
+  }
+
+
   // 获取当前选中项返回值
   const getSelectedValue = async (type: string, value: Array<number>) => {
     setListData([])
@@ -106,7 +145,6 @@ export default function Page() {
       setStyleSelected([])
       setSpacesSelected(value)
     }
-    console.log('value', value)
     const tagNum = JSON.parse(JSON.stringify(value));
     // setTagNum(tagNum)
     let data = await invokeHttp(1, type === 'synthesis' ? value[0] : 0, type === 'synthesis' ? [] : value);
@@ -174,7 +212,7 @@ export default function Page() {
       </div>
 
       {/* 列表 */}
-      <List listData={listData} showLoading={showLoading} />
+      <List listData={listData} showLoading={showLoading} onHanldeClick={getContentId} />
 
       {/* 算报价 */}
       <div className={styles.quotedPrice} onClick={handleQuoted}>
@@ -182,7 +220,11 @@ export default function Page() {
       </div>
 
       {/* 详情图片查看 */}
-      <ViewWithFooter />
+      {visible ?
+        <ViewWithFooter imgData={imgList} visible={visible} onClose={closeDetail} />
+        : ''
+      }
+
     </div>
   );
 }

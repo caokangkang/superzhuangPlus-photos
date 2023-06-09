@@ -32,12 +32,18 @@ export type plusDecorationContentParam = {
   sortType: number; // -- 排序规则：0推荐排序  1浏览数倒序排
 };
 
+// 详情接口入参
+export type decorationContentDetailsParam = {
+  contentId: string;
+}
+
 export type listDataType = {
   clickShow: number;
   contentTitle: string;
-  firstImg: string;
-  id: string;
-  [propName?: string]: any
+  firstImg?: string;
+  id?: string;
+  imgList: string[];
+  [propName?: string]: any;
 };
 
 declare module "antd-mobile";

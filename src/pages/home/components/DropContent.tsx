@@ -8,7 +8,7 @@ type DropProps = {
     value: number
   }[]
   isSelected: number[];
-  onSelected: (type: string, value: number) => void
+  onSelected: (type: string, value: number[]) => void
 }
 
 const DropContent = (props: DropProps) => {
@@ -51,4 +51,4 @@ const DropContent = (props: DropProps) => {
     </div>
   );
 }
-export default DropContent
+export default DropContent;

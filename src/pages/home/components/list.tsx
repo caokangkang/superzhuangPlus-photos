@@ -8,18 +8,24 @@ import { OrderSkeletons } from '@/skeletons/index';
 type ListProps = {
   listData: listDataType;
   showLoading: boolean;
+  onHanldeClick: (id: string) => void
 }
 
 const List = (props: ListProps) => {
-  const { listData } = props;
+  const { listData, onHanldeClick } = props;
   const browseImg = require('@/assets/png/browse.png');
+
+  const handleClick = (id: string, event: any) => {
+    onHanldeClick(id)
+  }
+
   return (
     <div>
       {isEmpty(listData) ?
         <OrderSkeletons /> :
         <div className={styles.listWrap}>
           {listData?.map((item: listDataType) => (
-            <div className={styles.ItemWrap} key={item.id}>
+            <div className={styles.ItemWrap} key={item.id} onClick={(event) => handleClick(item.id, event)}>
               <div className={styles.imgContent}>
                 <img src={item.firstImg} alt="" />
                 <div className={styles.browseWrap}>
