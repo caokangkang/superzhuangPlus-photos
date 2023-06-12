@@ -1,0 +1,54 @@
+.wrap {
+  background: #000;
+  height: 100vh;
+  .back{
+    position: fixed;
+    left: 32px;
+    top: 32px;
+    z-index: 1000;
+    width: 70px;
+    height: 70px;
+    background: url("../../assets/png/back.png") no-repeat;
+    background-size: 100% 100%;
+  }
+  .footer {
+    position: absolute;
+    width: 100%;
+    bottom: 60px;
+    z-index: 1;
+    .contentTitle {
+      margin-left: 40px;
+      font-size: 30px;
+      font-weight: 500;
+      color: #ffffff;
+    }
+    .clickShow {
+      margin-left: 40px;
+      margin-top: 24px;
+      .browseImg {
+        margin-right: 8px;
+        display: inline-block;
+        width: 24px;
+        height: 18px;
+      }
+      .browseNum {
+        font-size: 24px;
+        font-weight: 400;
+        color: #ffffff;
+      }
+    }
+  }
+
+  .footerButton {
+    margin-left: 40px;
+    margin-top: 40px;
+    width: 100%;
+    font-size: var(--adm-font-size-4);
+    color: #ffffff;
+    line-height: 1;
+    text-align: center;
+    .button {
+      width: 630px;
+    }
+  }
+}

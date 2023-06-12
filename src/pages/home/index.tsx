@@ -4,11 +4,10 @@ import { Dropdown } from 'antd-mobile';
 import { DownOutline } from 'antd-mobile-icons';
 import { isEmpty } from 'project-libs';
 import { getMater, plusDecorationContentList, getDecorationContentDetails } from './service';
-import type { dictionariesData, plusDecorationContentParam, listDataType } from './data';
+import type { dictionariesData, listDataType } from './data';
 import { queryKeyArrayItem, getUrlParameter } from '@/uitls/index';
 import DropContent from './components/DropContent';
 import List from './components/list';
-import ViewWithFooter from './components/ImgDetail/index';
 import { useObserverHook } from '@/hooks/index';
 import { CommonEnum } from '@/enums/index';
 
@@ -69,11 +68,10 @@ export default function Page() {
   }
 
   const invokeHttp = async (currentPage: number, sortType: number = 0, secondTagNumbers: number[] = []) => {
-    console.log('tagNum', tagNum)
     const { data } = await plusDecorationContentList({
       ...page,
       currentPage,
-      contentTemplate: '9500002',
+      contentTemplate: '9500005',
       // contentTemplateSecond:'',
       secondTagNumbers,
       // typeCode: '',
@@ -88,7 +86,7 @@ export default function Page() {
   // 获取列表
   const getList = async (currentPage: number) => {
     const data = await invokeHttp(currentPage);
-    if (!isEmpty(data) && data.data.length === page.pageSize) {
+    if (!isEmpty(data)) {
       setListData(data.data)
       setShowLoading(true);
     } else {
@@ -218,12 +216,6 @@ export default function Page() {
       <div className={styles.quotedPrice} onClick={handleQuoted}>
         <img src={calculatorImg} alt="" />
       </div>
-
-      {/* 详情图片查看 */}
-      {visible ?
-        <ViewWithFooter imgData={imgList} visible={visible} onClose={closeDetail} />
-        : ''
-      }
 
     </div>
   );

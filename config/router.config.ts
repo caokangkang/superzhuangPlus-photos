@@ -18,6 +18,12 @@ export default [
         title: '首页',
         name: 'home',
         component: '@/pages/home',
+      },
+      {
+        path: '/detail',
+        title: '详情',
+        name: 'detail',
+        component: '@/pages/detail',
       }
     ],
   },

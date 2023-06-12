@@ -9,6 +9,12 @@ const { UMI_ENV, NODE_ENV, npm_package_version  } = process.env;
 const NODE_IS_DEV = NODE_ENV === 'development';
 
 export default defineConfig({
+  history: {
+    type: 'hash'
+  },
+  base: '/',
+  publicPath: process.env.NODE_ENV === 'production' ? './' : '/',
+  hash: true,
   routes: pageRouter,
   npmClient: 'yarn',
   extraPostCSSPlugins: [
@@ -24,6 +30,7 @@ export default defineConfig({
   ],
   proxy: proxyConfig,
   define: {
+    "process.env.apiUrl": 'https://plusapi-test.chuhaikankan.com/',
     UMI_ENV,
     NODE_IS_DEV,
     RELEASE_VERSION: npm_package_version

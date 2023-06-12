@@ -2,6 +2,8 @@ import { Toast } from "antd-mobile";
 import { history } from "umi";
 import { extend } from "umi-request";
 
+console.log('first', process.env.apiUrl)
+
 /** 异常处理程序 */
 const codeMessage = {
   200: "服务器成功返回请求的数据。",
@@ -40,6 +42,7 @@ const errorHandler = (error: any) => {
 };
 // 对 extend 实例进行简单的封装
 const request = extend({
+  prefix: process.env.apiUrl,
   timeout: 5000,
   headers: {
     "Content-type": "application/json;charset=utf-8",

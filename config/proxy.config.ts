@@ -16,8 +16,8 @@ const ProConfig = {
 
 export default {
    "/api": {
-    // target: ProConfig[UMI_ENV],
-    target: 'https://plusapi-test.chuhaikankan.com/',
+    target: ProConfig[UMI_ENV],
+    // target: 'https://plusapi-test.chuhaikankan.com/',
     changeOrigin: true,
     pathRewrite: { '^': '' },
   },
