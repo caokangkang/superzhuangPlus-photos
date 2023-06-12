@@ -146,7 +146,7 @@ export default function Page() {
     const tagNum = JSON.parse(JSON.stringify(value));
     // setTagNum(tagNum)
     let data = await invokeHttp(1, type === 'synthesis' ? value[0] : 0, type === 'synthesis' ? [] : value);
-    if (!isEmpty(data) && data.data.length === page.pageSize) {
+    if (!isEmpty(data)) {
       setListData(data.data)
       setShowLoading(true);
     } else {
