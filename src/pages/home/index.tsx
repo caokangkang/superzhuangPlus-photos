@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from './index.less';
 import { Dropdown } from 'antd-mobile';
 import { DownOutline } from 'antd-mobile-icons';
-import { isEmpty } from 'project-libs';
+import { isEmpty, urlGet } from 'project-libs';
 import { getMater, plusDecorationContentList, getDecorationContentDetails } from './service';
 import type { dictionariesData, listDataType } from './data';
 import { queryKeyArrayItem, getUrlParameter } from '@/uitls/index';
@@ -161,7 +161,6 @@ export default function Page() {
  * 4，拼装数据，然后page
  */
   useObserverHook('#' + CommonEnum.LOADING_ID, async (entries: any) => {
-    // console.log(entries)
     if (entries[0].isIntersecting) {
       const result = await invokeHttp(page.currentPage + 1);
       if (!isEmpty(listData) && !isEmpty(result.data) && result.data.length === page.pageSize) {
@@ -186,7 +185,8 @@ export default function Page() {
 
   // 算报价
   const handleQuoted = () => {
-    window.location.href = 'http://plusm-test.chuhaikankan.com/QuotesGadgets?tfcode=baidu_free&PageName=';
+    const tfcode = urlGet('tfcode');
+    window.location.href = `http://plusm-test.chuhaikankan.com/QuotesGadgets?tfcode=${tfcode ? tfcode : 'baidu_free'}`;
   }
 
 

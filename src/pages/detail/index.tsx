@@ -41,7 +41,8 @@ export default function Page() {
 
   // 算报价
   const handleQuoted = () => {
-    window.location.href = 'http://plusm-test.chuhaikankan.com/QuotesGadgets?tfcode=baidu_free&PageName=';
+    const tfcode = urlGet('tfcode');
+    window.location.href = `http://plusm-test.chuhaikankan.com/QuotesGadgets?tfcode=${tfcode ? tfcode : 'baidu_free'}`;
   }
 
   const handleBack = () => {

@@ -1,11 +1,10 @@
 import React from 'react';
-import { isEmpty } from 'project-libs';
+import { isEmpty, urlGet } from 'project-libs';
 import styles from './list.less';
 import { Empty } from 'antd-mobile'
 import type { listDataType } from '../data';
 import { ShowLoading } from '@/components/index';
 import { history } from 'umi';
-import { OrderSkeletons } from '@/skeletons/index';
 
 type ListProps = {
   listData: listDataType;
@@ -21,7 +20,8 @@ const List = (props: ListProps) => {
   const handleClick = (id: string, event: any) => {
     onHanldeClick(id)
     // history.push(`/detail?id=${id}`)
-    history.push(`/detail`, id)
+    const tfcode = urlGet('tfcode');
+    history.push(`/detail?tfcode=${tfcode ? tfcode : 'baidu_free'}`, id);
     /* history.push({
       pathname: '/detail',
       query: {
