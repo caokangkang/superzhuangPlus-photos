@@ -22,12 +22,6 @@ const List = (props: ListProps) => {
     // history.push(`/detail?id=${id}`)
     const tfcode = urlGet('tfcode');
     history.push(`/detail?tfcode=${tfcode ? tfcode : 'baidu_free'}`, id);
-    /* history.push({
-      pathname: '/detail',
-      query: {
-        id: id
-      }
-    }) */
   }
 
   return (

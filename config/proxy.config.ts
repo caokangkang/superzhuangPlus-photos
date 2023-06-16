@@ -11,7 +11,7 @@ const { UMI_ENV }: processType = process.env;
 const ProConfig = {
   dev: "https://plusapi-test.chuhaikankan.com/",
   test: "https://plusapi-test.chuhaikankan.com/",
-  pro: "https://plusapi-test.chuhaikankan.com/",
+  pro: "https://api.superzhuangplus.com/",
 };
 
 export default {

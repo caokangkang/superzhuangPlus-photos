@@ -2,8 +2,6 @@ import { Toast } from "antd-mobile";
 import { history } from "umi";
 import { extend } from "umi-request";
 
-console.log('first', process.env.apiUrl)
-
 /** 异常处理程序 */
 const codeMessage = {
   200: "服务器成功返回请求的数据。",

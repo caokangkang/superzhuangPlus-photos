@@ -42,7 +42,7 @@ export default function Page() {
   // 算报价
   const handleQuoted = () => {
     const tfcode = urlGet('tfcode');
-    window.location.href = `http://plusm-test.chuhaikankan.com/QuotesGadgets?tfcode=${tfcode ? tfcode : 'baidu_free'}`;
+    window.location.href = `${UMI_ENV == 'prod' ? 'https://m.superzhuangplus.com/' : 'http://plusm-test.chuhaikankan.com/'}QuotesGadgets?tfcode=${tfcode ? tfcode : 'baidu_free'}`;
   }
 
   const handleBack = () => {

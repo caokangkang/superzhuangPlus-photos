@@ -1,5 +1,5 @@
 export default {
   define: {
-    "process.env.apiUrl": 'https://plusapi-test.chuhaikankan.com/'
+    "process.env.apiUrl": 'https://api.superzhuangplus.com/'
   }
 }
